@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Styled Map Selection</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js" charset="utf-8"></script>
+    <style>
+        #footer {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 10%;
+            margin: 0;
+            padding: 0;
+            background: #65d6fd;
+        }
+
+        #foot-button {
+            display: inline;
+            width: 30%;
+            height: 100%;
+            background-color: #65d6fd;
+            border: 1px white solid;
+            color: #ffffff;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+            height: 90%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .map-control {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
+            font-family: 'Roboto', 'sans-serif';
+            margin: 10px;
+            /* Hide the control initially, to prevent it from appearing
+           before the map loads. */
+            display: none;
+        }
+
+        /* Display the control once it is inside the map. */
+        #map .map-control {
+            display: block;
+        }
+
+        .selector-control {
+            font-size: 14px;
+            line-height: 30px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0 4px;
+        }
+
+        /* Create two equal columns that sits next to each other */
+        .column {
+            flex: 50%;
+            padding: 0 4px;
+            margin: auto;
+        }
+
+        .column img {
+            margin-top: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body>
+    <div align="center" height=10%>
+        <img src="./main_resource/title.png" />
+    </div>
+    <div id="style-selector-control" class="map-control">
+        <select id="style-selector" class="selector-control">
+            <option value="default">Default</option>
+            <option value="silver" selected="selected">Silver</option>
+            <option value="night">Night mode</option>
+            <option value="retro">Retro</option>
+            <option value="hiding">Hide features</option>
+        </select>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Casa Mila</p>
+            <div class="row">
+                <div class="column">
+                    <img src="./image_resource/casamila_0.jpg" height="155px" width="124px">
+                    <img src="./image_resource/casamila_1.jpg" height="155px" width="124px">
+                    <img src="./image_resource/casamila_2.jpg" height="155px" width="124px">
+                </div>
+                <div class="column">
+                    <img src="./image_resource/casamila_3.jpg" height="155px" width="124px">
+                    <img src="./image_resource/casamila_4.jpg" height="155px" width="124px">
+                    <img src="./image_resource/casamila_5.jpg" height="155px" width="124px">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="map"></div>
+    <input type="image" onclick="pin_new()" src="./icon_resource/plus_icon.png" style="position: absolute; top: 7.5%; right: 0px" width=15%>
+    <div id="advertise" style="position: absolute; bottom: 10%;"></div>
+    <div id="footer">
+        <button onclick="location.href='./character_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%;">
+            <img src="./main_resource/character_button.png" /></button>
+        <button onclick="location.href='./map_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%">
+            <img src="./main_resource/map_button.png" /></button>
+        <button onclick="location.href='./timeline_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%">
+            <img src="./main_resource/home_button.png" /></button>
+    </div>
+    <script>
+        var map;
+
+        function pin_new() {
+            if (typeof web3 !== 'undefined') {
+                web3 = new Web3(web3.currentProvider);
+            } else {
+                // Set the provider you want from Web3.providers
+                web3 = new Web3();
+                web3.setProvider(new web3.providers.HttpProvider("http://localhost:7545"));
+            }
+
+            web3.eth.defaultAccount = web3.eth.accounts[0];
+            var travlock = web3.eth.contract([{
+                    "constant": true,
+                    "inputs": [{
+                        "name": "interfaceID",
+                        "type": "bytes4"
+                    }],
+                    "name": "supportsInterface",
+                    "outputs": [{
+                        "name": "",
+                        "type": "bool"
+                    }],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [{
+                        "name": "tokenId",
+                        "type": "uint256"
+                    }],
+                    "name": "getApproved",
+                    "outputs": [{
+                        "name": "",
+                        "type": "address"
+                    }],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "approve",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "from",
+                            "type": "address"
+                        },
+                        {
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "transferFrom",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "from",
+                            "type": "address"
+                        },
+                        {
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "safeTransferFrom",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "owner",
+                            "type": "address"
+                        },
+                        {
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "_burn",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [{
+                        "name": "tokenId",
+                        "type": "uint256"
+                    }],
+                    "name": "ownerOf",
+                    "outputs": [{
+                        "name": "",
+                        "type": "address"
+                    }],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [{
+                        "name": "_tokenId",
+                        "type": "uint256"
+                    }],
+                    "name": "tokenMetadata",
+                    "outputs": [{
+                        "name": "",
+                        "type": "string"
+                    }],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [{
+                        "name": "owner",
+                        "type": "address"
+                    }],
+                    "name": "balanceOf",
+                    "outputs": [{
+                        "name": "",
+                        "type": "uint256"
+                    }],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [{
+                            "name": "owner",
+                            "type": "address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "_printtokenid",
+                    "outputs": [{
+                        "name": "",
+                        "type": "uint256"
+                    }],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "from",
+                            "type": "address"
+                        },
+                        {
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "_removeTokenFrom",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "approved",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "setApprovalForAll",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "tokenId",
+                            "type": "uint256"
+                        },
+                        {
+                            "name": "data",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "_mint",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "from",
+                            "type": "address"
+                        },
+                        {
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "tokenId",
+                            "type": "uint256"
+                        },
+                        {
+                            "name": "_data",
+                            "type": "bytes"
+                        }
+                    ],
+                    "name": "safeTransferFrom",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "constant": true,
+                    "inputs": [{
+                            "name": "owner",
+                            "type": "address"
+                        },
+                        {
+                            "name": "operator",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "isApprovedForAll",
+                    "outputs": [{
+                        "name": "",
+                        "type": "bool"
+                    }],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "constant": false,
+                    "inputs": [{
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "_addTokenTo",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "constructor"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [{
+                            "indexed": true,
+                            "name": "from",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "name": "to",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "Transfer",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [{
+                            "indexed": true,
+                            "name": "owner",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "name": "approved",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "name": "tokenId",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "Approval",
+                    "type": "event"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [{
+                            "indexed": true,
+                            "name": "owner",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "name": "operator",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": false,
+                            "name": "approved",
+                            "type": "bool"
+                        }
+                    ],
+                    "name": "ApprovalForAll",
+                    "type": "event"
+                }
+            ]).at("0x07974a3c27c6aba72603823d2ec52211dff3c5ef"); //smart contract address
+            var d = new Date();
+            var tokenId = d.getTime();
+
+            var tx = travlock._mint(
+                "0x2a653c15a315E53D1dafBe110eC1B19005314889", //user's account
+                tokenId,
+                "Casa Mila", {
+                    gas: 1000000
+                });
+            var image_or = {
+                url: 'https://i.imgur.com/3feoP0R.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(20, 20),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(10, 10)
+            };
+            var shape = {
+                coords: [1, 1, 1, 20, 18, 20, 18, 1],
+                type: 'poly'
+            };
+            for (var i = 0; i < barcelona_landmarks.length; i++) {
+                var place = barcelona_landmarks[i];
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: place[1],
+                        lng: place[2]
+                    },
+                    map: map,
+                    icon: image_or,
+                    shape: shape,
+                    title: place[0],
+                    zIndex: place[3],
+                    animation: google.maps.Animation.DROP
+                });
+                marker.addListener('click', function() {
+
+                    // Get the modal
+                    var modal = document.getElementById('myModal');
+
+                    // Get the button that opens the modal
+                    //var btn = document.getElementById("myBtn");
+
+                    // Get the <span> element that closes the modal
+                    var span = document.getElementsByClassName("close")[0];
+
+                    // When the user clicks on the button, open the modal
+
+                    modal.style.display = "block";
+
+
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function() {
+                        modal.style.display = "none";
+                    }
+
+                    // When the user clicks anywhere outside of the modal, close it
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                });
+            };
+        }
+
+        setInterval(function() {
+            var currentDate = new Date();
+            // var num = currentDate.getHour() + currentDate.getMinutes() + currentDate.getSeconds();
+            var num = 10;
+            if (num % 10 == 0) {
+                var img = document.createElement("img");
+                img.src = "./main_resource/advertising.png";
+                img.setAttribute("width", "80%");
+                // img.setAttribute("style", "position: absolute; top: 0px; left: 0px");
+                document.getElementById("advertise").appendChild(img);
+                setTimeout(function() {
+                    document.getElementById("advertise").innerHTML = '';
+                }, 5000)
+            }
+        }, 10000);
+
+        function initMap() {
+            // Create the map with no initial style specified.
+            // It therefore has default styling.
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: 48.858554,
+                    lng: 2.294460
+                },
+                zoom: 1.9,
+                mapTypeControl: false
+            });
+
+            // Add a style-selector control to the map.
+            var styleControl = document.getElementById('style-selector-control');
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(styleControl);
+
+            // Set the map's style to the initial value of the selector.
+            var styleSelector = document.getElementById('style-selector');
+            map.setOptions({
+                styles: styles[styleSelector.value]
+            });
+
+            // Apply new JSON when the user selects a different style.
+            styleSelector.addEventListener('change', function() {
+                map.setOptions({
+                    styles: styles[styleSelector.value]
+                });
+            });
+
+            setMarkers();
+
+
+
+        }
+
+        // Data for the markers consisting of a name, a LatLng and a zIndex for the
+        // order in which these markers should display on top of each other.
+        var paris_landmarks = [
+            ['Eiffel Tower', 48.858554, 2.294460, 4],
+            ['Triumphal Arch', 48.873989, 2.295038, 5],
+            ['Louvre Museum', 48.860759, 2.337644, 3],
+            ['Montmartre', 48.886343, 2.343067, 2],
+            ['Orsay Museum', 48.859997, 2.326583, 1],
+            ['Notredame Cathedral', 48.852989, 2.349902, 1]
+        ];
+        var rome_landmarks = [
+            ['Colosseum', 41.890234, 12.492252, 4],
+            ['Trevi Fountain', 41.900917, 12.483319, 5],
+            ['Pantheon', 41.898638, 12.476879, 3],
+            ['Mouth of Truth', 41.888112, 12.481455, 2]
+        ];
+        var firenze_landmarks = [
+            ['Duomo Cathedral', 43.773153, 11.255960, 4],
+            ['Uffizi Gallery', 43.767791, 11.255312, 5],
+            ['Vecchio Bridge', 43.767938, 11.253123, 3]
+        ];
+        var venice_landmarks = [
+            ['Burano Island', 45.485428, 12.416596, 4],
+            ['San Marco Piazza', 45.434188, 12.338467, 5]
+        ];
+        var london_landmarks = [
+            ['London Eye', 51.503334, -0.119539, 4],
+            ['Tower Bridge', 51.505477, -0.075343, 5],
+            ['Buckingham Palace', 51.501384, -0.141901, 3],
+            ['Big Ben', 51.500739, -0.124604, 2]
+        ];
+        var madrid_landmarks = [
+            ['Madrid Palace', 40.417971, -3.714312, 4],
+            ['Sol Square', 40.416957, -3.703535, 5],
+            ['Prado Gallery', 40.413803, -3.692120, 3],
+            ['Toledo Catedral', 39.857125, -4.023537, 2]
+        ];
+        var barcelona_landmarks = [
+            /*
+                ['Sagrada Familia', 41.403609, 2.174368, 4],
+                ['Park Guell', 41.414436, 2.152706, 5],
+                ['Magic Fountain of Montjuic', 41.371161, 2.151820, 2]
+            */
+            ['Casa Mila', 41.395382, 2.161961, 3]
+
+        ];
+
+
+
+        function setMarkers() {
+            // Adds markers to the map.
+
+            // Marker sizes are expressed as a Size of X,Y where the origin of the image
+            // (0,0) is located in the top left of the image.
+
+            // Origins, anchor positions and coordinates of the marker increase in the X
+            // direction to the right and in the Y direction down.
+            var image_dg = {
+                url: 'https://i.imgur.com/NojOalO.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(20, 20),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(10, 10)
+            };
+            var image_dp = {
+                url: 'https://i.imgur.com/H7oRZMp.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(20, 20),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(10, 10)
+            };
+            var image_lb = {
+                url: 'https://i.imgur.com/3IkCZN3.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(20, 20),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(10, 10)
+            };
+            var image_lg = {
+                url: 'https://i.imgur.com/45mlN35.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(20, 20),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(10, 10)
+            };
+            var image_lp = {
+                url: 'https://i.imgur.com/bEo6W57.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(20, 20),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(10, 10)
+            };
+            var image_dy = {
+                url: 'https://i.imgur.com/2k4STGU.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(20, 20),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(10, 10)
+            };
+            var image_or = {
+                url: 'https://i.imgur.com/3feoP0R.png',
+                // This marker is 20 pixels wide by 32 pixels high.
+                size: new google.maps.Size(20, 20),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(10, 10)
+            };
+            // Shapes define the clickable region of the icon. The type defines an HTML
+            // <area> element 'poly' which traces out a polygon as a series of X,Y points.
+            // The final coordinate closes the poly by connecting to the first coordinate.
+            var shape = {
+                coords: [1, 1, 1, 20, 18, 20, 18, 1],
+                type: 'poly'
+            };
+            for (var i = 0; i < paris_landmarks.length; i++) {
+                var place = paris_landmarks[i];
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: place[1],
+                        lng: place[2]
+                    },
+                    map: map,
+                    icon: image_dg,
+                    shape: shape,
+                    title: place[0],
+                    zIndex: place[3],
+                    animation: google.maps.Animation.DROP
+                });
+            }
+            for (var i = 0; i < rome_landmarks.length; i++) {
+                var place = rome_landmarks[i];
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: place[1],
+                        lng: place[2]
+                    },
+                    map: map,
+                    icon: image_dp,
+                    shape: shape,
+                    title: place[0],
+                    zIndex: place[3],
+                    animation: google.maps.Animation.DROP
+                });
+            }
+            for (var i = 0; i < firenze_landmarks.length; i++) {
+                var place = firenze_landmarks[i];
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: place[1],
+                        lng: place[2]
+                    },
+                    map: map,
+                    icon: image_lb,
+                    shape: shape,
+                    title: place[0],
+                    zIndex: place[3],
+                    animation: google.maps.Animation.DROP
+                });
+            }
+            for (var i = 0; i < venice_landmarks.length; i++) {
+                var place = venice_landmarks[i];
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: place[1],
+                        lng: place[2]
+                    },
+                    map: map,
+                    icon: image_lg,
+                    shape: shape,
+                    title: place[0],
+                    zIndex: place[3],
+                    animation: google.maps.Animation.DROP
+                });
+            }
+            for (var i = 0; i < london_landmarks.length; i++) {
+                var place = london_landmarks[i];
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: place[1],
+                        lng: place[2]
+                    },
+                    map: map,
+                    icon: image_lp,
+                    shape: shape,
+                    title: place[0],
+                    zIndex: place[3],
+                    animation: google.maps.Animation.DROP
+                });
+            }
+            for (var i = 0; i < madrid_landmarks.length; i++) {
+                var place = madrid_landmarks[i];
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: place[1],
+                        lng: place[2]
+                    },
+                    map: map,
+                    icon: image_dy,
+                    shape: shape,
+                    title: place[0],
+                    zIndex: place[3],
+                    animation: google.maps.Animation.DROP
+                });
+            }
+
+
+
+        }
+
+
+        var styles = {
+            default: null,
+            silver: [{
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#f5f5f5'
+                    }]
+                },
+                {
+                    elementType: 'labels.icon',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                },
+                {
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#616161'
+                    }]
+                },
+                {
+                    elementType: 'labels.text.stroke',
+                    stylers: [{
+                        color: '#f5f5f5'
+                    }]
+                },
+                {
+                    featureType: 'administrative.land_parcel',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#bdbdbd'
+                    }]
+                },
+                {
+                    featureType: 'poi',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#eeeeee'
+                    }]
+                },
+                {
+                    featureType: 'poi',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#757575'
+                    }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#e5e5e5'
+                    }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#9e9e9e'
+                    }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#ffffff'
+                    }]
+                },
+                {
+                    featureType: 'road.arterial',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#757575'
+                    }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#dadada'
+                    }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#616161'
+                    }]
+                },
+                {
+                    featureType: 'road.local',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#9e9e9e'
+                    }]
+                },
+                {
+                    featureType: 'transit.line',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#e5e5e5'
+                    }]
+                },
+                {
+                    featureType: 'transit.station',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#eeeeee'
+                    }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#c9c9c9'
+                    }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#9e9e9e'
+                    }]
+                }
+            ],
+
+            night: [{
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#242f3e'
+                    }]
+                },
+                {
+                    elementType: 'labels.text.stroke',
+                    stylers: [{
+                        color: '#242f3e'
+                    }]
+                },
+                {
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#746855'
+                    }]
+                },
+                {
+                    featureType: 'administrative.locality',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#d59563'
+                    }]
+                },
+                {
+                    featureType: 'poi',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#d59563'
+                    }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#263c3f'
+                    }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#6b9a76'
+                    }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#38414e'
+                    }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry.stroke',
+                    stylers: [{
+                        color: '#212a37'
+                    }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#9ca5b3'
+                    }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#746855'
+                    }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry.stroke',
+                    stylers: [{
+                        color: '#1f2835'
+                    }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#f3d19c'
+                    }]
+                },
+                {
+                    featureType: 'transit',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#2f3948'
+                    }]
+                },
+                {
+                    featureType: 'transit.station',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#d59563'
+                    }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#17263c'
+                    }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#515c6d'
+                    }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'labels.text.stroke',
+                    stylers: [{
+                        color: '#17263c'
+                    }]
+                }
+            ],
+
+            retro: [{
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#ebe3cd'
+                    }]
+                },
+                {
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#523735'
+                    }]
+                },
+                {
+                    elementType: 'labels.text.stroke',
+                    stylers: [{
+                        color: '#f5f1e6'
+                    }]
+                },
+                {
+                    featureType: 'administrative',
+                    elementType: 'geometry.stroke',
+                    stylers: [{
+                        color: '#c9b2a6'
+                    }]
+                },
+                {
+                    featureType: 'administrative.land_parcel',
+                    elementType: 'geometry.stroke',
+                    stylers: [{
+                        color: '#dcd2be'
+                    }]
+                },
+                {
+                    featureType: 'administrative.land_parcel',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#ae9e90'
+                    }]
+                },
+                {
+                    featureType: 'landscape.natural',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#dfd2ae'
+                    }]
+                },
+                {
+                    featureType: 'poi',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#dfd2ae'
+                    }]
+                },
+                {
+                    featureType: 'poi',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#93817c'
+                    }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'geometry.fill',
+                    stylers: [{
+                        color: '#a5b076'
+                    }]
+                },
+                {
+                    featureType: 'poi.park',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#447530'
+                    }]
+                },
+                {
+                    featureType: 'road',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#f5f1e6'
+                    }]
+                },
+                {
+                    featureType: 'road.arterial',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#fdfcf8'
+                    }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#f8c967'
+                    }]
+                },
+                {
+                    featureType: 'road.highway',
+                    elementType: 'geometry.stroke',
+                    stylers: [{
+                        color: '#e9bc62'
+                    }]
+                },
+                {
+                    featureType: 'road.highway.controlled_access',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#e98d58'
+                    }]
+                },
+                {
+                    featureType: 'road.highway.controlled_access',
+                    elementType: 'geometry.stroke',
+                    stylers: [{
+                        color: '#db8555'
+                    }]
+                },
+                {
+                    featureType: 'road.local',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#806b63'
+                    }]
+                },
+                {
+                    featureType: 'transit.line',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#dfd2ae'
+                    }]
+                },
+                {
+                    featureType: 'transit.line',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#8f7d77'
+                    }]
+                },
+                {
+                    featureType: 'transit.line',
+                    elementType: 'labels.text.stroke',
+                    stylers: [{
+                        color: '#ebe3cd'
+                    }]
+                },
+                {
+                    featureType: 'transit.station',
+                    elementType: 'geometry',
+                    stylers: [{
+                        color: '#dfd2ae'
+                    }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'geometry.fill',
+                    stylers: [{
+                        color: '#b9d3c2'
+                    }]
+                },
+                {
+                    featureType: 'water',
+                    elementType: 'labels.text.fill',
+                    stylers: [{
+                        color: '#92998d'
+                    }]
+                }
+            ],
+
+            hiding: [{
+                    featureType: 'poi.business',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                },
+                {
+                    featureType: 'transit',
+                    elementType: 'labels.icon',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                }
+            ]
+        };
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+    </script>
+</body>
+
+</html>

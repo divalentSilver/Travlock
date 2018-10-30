@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            width:100%;
+            width=300px;
+        }
+        table, th, td {
+            border: 5px solid #65d6fd;
+            border-radius: 20px;
+            line-height:0;
+        }
+        th {
+            background-color: #cdf1fe;
+            padding: 15px;
+        }
+        #footer {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 10%;
+            background:#65d6fd;
+        }
+        #foot-button {
+            display: inline;
+            width: 30%;
+            height: 100%;
+            background-color:#65d6fd;
+            border: 1px white solid;
+            color: #ffffff;
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+
+<body style="margin-left: 0; margin-right: -10px">
+    <div align="center" height=10%>
+        <img src="./main_resource/title.png" />
+    </div>
+    <div style="background: #f2f2f2">
+        <br>
+        <p align="center" style="margin: 0; padding: 0">
+            <img src="./character_resource/user_character.png" width=30% style="margin-left: 20%; display: inline-block;" />
+            <img src="./character_resource/title_award.png" height=75px style="margin-bottom: 25%; display: inline-block;" />
+            <!-- <img src="./character_resource/title_award.png" height=75px > -->
+            <!-- <br> -->
+            <!-- <img src="./character_resource/user_character.png"> -->
+            <br>
+            <strong>tralockk134</strong>
+        </p>
+        <div id="item-zone"></div>
+        <br>
+    </div>
+    <div>
+        <p align="center" style="color: #65d6fd">
+            <span style="font-size: 1.2em"><strong>여행 배낭</strong></span>
+        </p>
+        <p align="center" style="margin: 0; padding: 0">
+            <button onclick="item()" id="item" style="background-color: transparent; border: none; height: 50px; width: 40%; color: #65d6fd">
+                <span style="font-size: 1.2em"><strong>아이템</strong></span></button>
+            <button onclick="badge()" id="badge" style="background-color: transparent; border: none; height: 50px; width: 40%">
+                <span style="font-size: 1.2em"><strong>뱃지</strong></span></button>
+        </p>
+    </div>
+    <div align="center" style="background-color: #65d6fd; overflow:auto; width:100%; height:270px; padding:5px; margin:auto;">
+        <table id="table-contents">
+            <tbody>
+                <tr>
+                    <th><input type="image" src='./character_resource/item0.png' onclick="draw('./character_resource/item0.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item1.png' onclick="draw('./character_resource/item1.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item2.png' onclick="draw('./character_resource/item2.png')" width=100%></th>
+                </tr>
+                <tr>
+                    <th><input type="image" src='./character_resource/item3.png' onclick="draw('./character_resource/item3.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item4.png' onclick="draw('./character_resource/item4.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item5.png' onclick="draw('./character_resource/item5.png')" width=100%></th>
+                </tr>
+                <tr>
+                    <th><input type="image" src='./character_resource/item6.png' onclick="draw('./character_resource/item6.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item7.png' onclick="draw('./character_resource/item7.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item8.png' onclick="draw('./character_resource/item8.png')" width=100%></th>
+                </tr>
+                <tr>
+                    <th><input type="image" src='./character_resource/item9.png' onclick="draw('./character_resource/item9.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item10.png' onclick="draw('./character_resource/item10.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item11.png' onclick="draw('./character_resource/item11.png')" width=100%></th>
+                </tr>
+                <tr>
+                    <th><input type="image" src='./character_resource/item12.png' onclick="draw('./character_resource/item12.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item13.png' onclick="draw('./character_resource/item13.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item14.png' onclick="draw('./character_resource/item14.png')" width=100%></th>
+                </tr>
+                <tr>
+                    <th><input type="image" src='./character_resource/item15.png' onclick="draw('./character_resource/item15.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item16.png' onclick="draw('./character_resource/item16.png')" width=100%></th>
+                    <th><input type="image" src='./character_resource/item17.png' onclick="draw('./character_resource/item17.png')" width=100%></th>
+                </tr>
+                <tr>
+                    <th width=33.3%><input type="image" src='./character_resource/item18.png' onclick="draw('./character_resource/item18.png')" width=100%></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="footer">
+        <button onclick="location.href='./character_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%;">
+            <img src="./main_resource/character_button.png" /></button>
+        <button onclick="location.href='./map_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%">
+            <img src="./main_resource/map_button.png" /></button>
+        <button onclick="location.href='./timeline_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%">
+            <img src="./main_resource/home_button.png" /></button>
+    </div>
+    <script>
+        table = document.getElementById("table-contents");
+        var left = false;
+        var right = false;
+        var chicken = false;
+
+        function item() {
+            document.getElementById("item").setAttribute("style", "background-color: transparent; border: none; height: 50px; width: 40%; color: #65d6fd")
+            document.getElementById("badge").setAttribute("style", "background-color: transparent; border: none; height: 50px; width: 40%; color: #000000")
+            var item_num = 19;
+            table.innerHTML = '';
+            for (var i = 0; i < item_num / 3; i++) {
+                var tr = document.createElement("tr");
+                for (var j = 0; j < 3 && (i * 3 + j) < item_num; j++) {
+                    var th = document.createElement("th");
+                    th.setAttribute("width", "30%");
+                    var input = document.createElement("input");
+                    input.type = "image";
+                    input.src = "./character_resource/item" + (i * 3 + j) + ".png";
+                    input.setAttribute("width", "100%");
+                    input.setAttribute("onclick", "draw('./character_resource/item" + (i * 3 + j) + ".png')");
+                    th.appendChild(input);
+                    tr.appendChild(th);
+                }
+                table.appendChild(tr);
+            }
+        }
+
+        function draw(img_src) {
+            if (img_src == "./character_resource/item18.png") {
+                if (!chicken) {
+                    var div = document.createElement("div");
+                    div.setAttribute("style", "position: absolute");
+                    var img = document.createElement("img");
+                    img.src = img_src;
+                    img.setAttribute("style", "position: relative; top: -350px; left: 180px");
+                    img.setAttribute("width", "30%");
+                    div.appendChild(img);
+                    document.getElementById("item-zone").appendChild(div);
+                    chicken = true;
+                }
+            } else {
+                if (!left && !right) {
+                    var div = document.createElement("div");
+                    div.setAttribute("style", "position: absolute");
+                    var img = document.createElement("img");
+                    img.src = img_src;
+                    img.setAttribute("style", "position: relative; top: -210px; left: 110px");
+                    img.setAttribute("width", "30%");
+                    div.appendChild(img);
+                    document.getElementById("item-zone").appendChild(div);
+                    left = true;
+                } else if (left && !right) {
+                    var div = document.createElement("div");
+                    div.setAttribute("style", "position: absolute");
+                    var img = document.createElement("img");
+                    img.src = img_src;
+                    img.setAttribute("style", "position: relative; top: -210px; left: 290px");
+                    img.setAttribute("width", "30%");
+                    div.appendChild(img);
+                    document.getElementById("item-zone").appendChild(div);
+                    right = true;
+                } else if (!left && right) {
+                    var div = document.createElement("div");
+                    div.setAttribute("style", "position: absolute");
+                    var img = document.createElement("img");
+                    img.src = img_src;
+                    img.setAttribute("style", "position: relative; top: -210px; left: 110px");
+                    img.setAttribute("width", "30%");
+                    div.appendChild(img);
+                    document.getElementById("item-zone").appendChild(div);
+                    left = true;
+                } else if (left && right) {
+                    document.getElementById("item-zone").innerHTML = ''
+                    var div = document.createElement("div");
+                    div.setAttribute("style", "position: absolute");
+                    var img = document.createElement("img");
+                    img.src = img_src;
+                    if (Math.random() * 2 > 1) {
+                        img.setAttribute("style", "position: relative; top: -210px; left: 110px");
+                        left = true;
+                        right = false;
+                    } else {
+                        img.setAttribute("style", "position: relative; top: -210px; left: 290px");
+                        right = true;
+                        left = false;
+                    }
+                    img.setAttribute("width", "30%");
+                    div.appendChild(img);
+                    document.getElementById("item-zone").appendChild(div);
+                }
+            }
+        }
+
+        function badge() {
+            document.getElementById("badge").setAttribute("style", "background-color: transparent; border: none; height: 50px; width: 40%; color: #65d6fd")
+            document.getElementById("item").setAttribute("style", "background-color: transparent; border: none; height: 50px; width: 40%; color: #000000")
+            var badge_num = 9;
+            table.innerHTML = "";
+            for (var i = 0; i < badge_num / 3; i++) {
+                var tr = document.createElement("tr");
+                for (var j = 0; j < 3; j++) {
+                    var th = document.createElement("th");
+                    var img = document.createElement("img");
+                    img.src = "./character_resource/badge" + (i * 3 + j) + ".png";
+                    img.setAttribute("width", "100%");
+                    th.appendChild(img);
+                    tr.appendChild(th);
+                }
+                table.appendChild(tr);
+            }
+        }
+    </script>
+</body>
+
+</html>

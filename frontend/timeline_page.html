@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        img.quote{padding-right: 0.5em; float: left;}
+    #footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 10%;
+        background:#65d6fd;
+    }
+    #foot-button {
+        display: inline;
+        width: 30%;
+        height: 100%;
+        background-color:#65d6fd;
+        border: 1px white solid;
+        color: #ffffff;
+        margin: 0px;
+        padding: 0px;
+    }
+    /* The Modal (background) */
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        /* Could be more or less, depending on screen size */
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 4px;
+    }
+
+    /* Create two equal columns that sits next to each other */
+    .column {
+        flex: 50%;
+        padding: 0 4px;
+        margin: auto;
+    }
+
+    .column img {
+        margin-top: 8px;
+        vertical-align: middle;
+    }
+    </style>
+</head>
+
+<body>
+    <div align="center" height=10%>
+        <img src="./main_resource/title.png" />
+    </div>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Casa Mila</p>
+            <div class="row">
+                <div class="column">
+                    <img src="./image_resource/casamila_0.jpg" height="110px" width="90px">
+                    <img src="./image_resource/casamila_1.jpg" height="110px" width="90px">
+                    <img src="./image_resource/casamila_2.jpg" height="110px" width="90px">
+                </div>
+                <div class="column">
+                    <img src="./image_resource/casamila_3.jpg" height="110px" width="90px">
+                    <img src="./image_resource/casamila_4.jpg" height="110px" width="90px">
+                    <img src="./image_resource/casamila_5.jpg" height="110px" width="90px">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <p align="right" style="margin-right:10%; color: #65d6fd"><span style="font-size: 1.3em"><strong>Where have you been?</strong></span></p>
+    <br>
+    <div style="overflow:auto; height:520px; margin-left:20%; margin-right: -25px">
+        <p></p>
+        <img src="./timeline_resource/dot.png" class="quote">
+        <p> 1st 파리 </p>
+        <!-- <img src="./timeline_resource/dotsline.png"><p></p> -->
+        <!-- <button class="btn" id="btn" type="submit"><img src="./timeline_resource/dotsline.png"></button> -->
+        <div id="line1">
+            <input type="image" src="./timeline_resource/dotsline.png" onclick="dots('line1', 7)">
+            <p></p>
+        </div>
+        <img src="./timeline_resource/dot.png" class="quote">
+        <p> 2nd 로마 </p>
+        <div id="line2">
+            <input type="image" src="./timeline_resource/dotsline.png" onclick="dots('line2', 4)">
+            <p></p>
+        </div>
+        <img src="./timeline_resource/dot.png" class="quote">
+        <p> 3rd 피렌체 </p>
+        <div id="line3">
+            <input type="image" src="./timeline_resource/dotsline.png" onclick="dots('line3', 3)">
+            <p></p>
+        </div>
+        <img src="./timeline_resource/dot.png" class="quote">
+        <p> 4th 베니스 </p>
+        <div id="line4">
+            <input type="image" src="./timeline_resource/dotsline.png" onclick="dots('line4', 2)">
+            <p></p>
+        </div>
+        <img src="./timeline_resource/dot.png" class="quote">
+        <p> 5th 런던 </p>
+        <div id="line5">
+            <input type="image" src="./timeline_resource/dotsline.png" onclick="dots('line5', 4)">
+            <p></p>
+        </div>
+        <img src="./timeline_resource/dot.png" class="quote">
+        <p> 6th 마드리드 </p>
+        <div id="line6">
+            <input type="image" src="./timeline_resource/dotsline.png" onclick="dots('line6', 4)">
+            <p></p>
+        </div>
+        <img src="./timeline_resource/dot.png" class="quote">
+        <p> 7th 바르셀로나 </p>
+        <div id="line7">
+            <input type="image" src="./timeline_resource/dotsline.png" onclick="dots('line7', 1)">
+            <p></p>
+        </div>
+    </div>
+    <div id="footer">
+        <button onclick="location.href='./character_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%;">
+            <img src="./main_resource/character_button.png" /></button>
+        <button onclick="location.href='./map_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%">
+            <img src="./main_resource/map_button.png" /></button>
+        <button onclick="location.href='./timeline_page.html'" style="border:none; background-color: transparent !important; height: 100%; width: 32%">
+            <img src="./main_resource/home_button.png" /></button>
+    </div>
+    <script>
+        var isclicked1, isclicked2, isclicked3, isclicked4, isclicked5, isclicked6, isclicked7;
+        var place1 = ['에펠탑', '개선문', '루브르 박물관', '몽마르뜨', '오르셈 미술관', '노트르담 대성당', '몽생미셸'];
+        var place2 = ['콜로세움', '트레비 분수', '판테온', '진실의 입'];
+        var place3 = ['두오모 성당', '우피치 미술관', '베키오 다리'];
+        var place4 = ['부라노 섬', '산 마르코 광장'];
+        var place5 = ['런던 아이', '타워 브리지', '버킹엄 궁전', '빅벤'];
+        var place6 = ['마드리드 왕궁', '솔 광장', '프라도 미술관', '톨레도 대성당'];
+        var place7 = ['카사 밀라'];
+
+        function dots(dnum, count) {
+            if (dnum == "line1") {
+                if (!isclicked1) {
+                    for (var i = 0; i < count; i++) {
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dot.png";
+                        img.style.display = 'inline-block';
+                        document.getElementById(dnum).appendChild(img);
+                        var input = document.createElement('input');
+                        input.setAttribute("type", "button");
+                        // input.setAttribute("onclick", "modal()");
+                        input.setAttribute("style", "background-color: transparent; border-radius: 20px; height: 30px; width: 150px");
+                        // input.setAttribute("src", "./timeline_resource/bubble.png");
+                        input.setAttribute("value", place1[i]);
+                        // img.setAttribute("src", "./timeline_resource/bubble.png");
+                        // var img = document.createElement('img');
+                        // img.style.display = "inline-block";
+                        // input.appendChild(img);
+                        document.getElementById(dnum).appendChild(input);
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dotsline.png";
+                        img.style.display = 'block';
+                        document.getElementById(dnum).appendChild(img);
+                        var p = document.createElement('p');
+                        document.getElementById(dnum).appendChild(p);
+                    }
+                    isclicked1 = true;
+                } else {
+                    document.getElementById(dnum).innerHTML = '<input type="image" src="./timeline_resource/dotsline.png" onclick="dots(\'' + dnum + '\', ' + count + ')"><p></p>';
+                    isclicked1 = false;
+                }
+            } else if (dnum == "line2") {
+                if (!isclicked2) {
+                    for (var i = 0; i < count; i++) {
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dot.png";
+                        img.style.display = 'inline-block';
+                        document.getElementById(dnum).appendChild(img);
+                        var input = document.createElement('input');
+                        input.setAttribute("type", "button");
+                        // input.setAttribute("onclick", "modal()");
+                        input.setAttribute("style", "background-color: transparent; border-radius: 20px; height: 30px; width: 150px");
+                        // input.setAttribute("src", "./timeline_resource/bubble.png");
+                        input.setAttribute("value", place2[i]);
+                        // img.setAttribute("src", "./timeline_resource/bubble.png");
+                        // var img = document.createElement('img');
+                        // img.style.display = "inline-block";
+                        // input.appendChild(img);
+                        document.getElementById(dnum).appendChild(input);
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dotsline.png";
+                        img.style.display = 'block';
+                        document.getElementById(dnum).appendChild(img);
+                        var p = document.createElement('p');
+                        document.getElementById(dnum).appendChild(p);
+                    }
+                    isclicked2 = true;
+                } else {
+                    document.getElementById(dnum).innerHTML = '<input type="image" src="./timeline_resource/dotsline.png" onclick="dots(\'' + dnum + '\', ' + count + ')"><p></p>';
+                    isclicked2 = false;
+                }
+            } else if (dnum == "line3") {
+                if (!isclicked3) {
+                    for (var i = 0; i < count; i++) {
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dot.png";
+                        img.style.display = 'inline-block';
+                        document.getElementById(dnum).appendChild(img);
+                        var input = document.createElement('input');
+                        input.setAttribute("type", "button");
+                        // input.setAttribute("onclick", "modal()");
+                        input.setAttribute("style", "background-color: transparent; border-radius: 20px; height: 30px; width: 150px");
+                        // input.setAttribute("src", "./timeline_resource/bubble.png");
+                        input.setAttribute("value", place3[i]);
+                        // img.setAttribute("src", "./timeline_resource/bubble.png");
+                        // var img = document.createElement('img');
+                        // img.style.display = "inline-block";
+                        // input.appendChild(img);
+                        document.getElementById(dnum).appendChild(input);
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dotsline.png";
+                        img.style.display = 'block';
+                        document.getElementById(dnum).appendChild(img);
+                        var p = document.createElement('p');
+                        document.getElementById(dnum).appendChild(p);
+                    }
+                    isclicked3 = true;
+                } else {
+                    document.getElementById(dnum).innerHTML = '<input type="image" src="./timeline_resource/dotsline.png" onclick="dots(\'' + dnum + '\', ' + count + ')"><p></p>';
+                    isclicked3 = false;
+                }
+            } else if (dnum == "line4") {
+                if (!isclicked4) {
+                    for (var i = 0; i < count; i++) {
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dot.png";
+                        img.style.display = 'inline-block';
+                        document.getElementById(dnum).appendChild(img);
+                        var input = document.createElement('input');
+                        input.setAttribute("type", "button");
+                        // input.setAttribute("onclick", "modal()");
+                        input.setAttribute("style", "background-color: transparent; border-radius: 20px; height: 30px; width: 150px");
+                        // input.setAttribute("src", "./timeline_resource/bubble.png");
+                        input.setAttribute("value", place4[i]);
+                        // img.setAttribute("src", "./timeline_resource/bubble.png");
+                        // var img = document.createElement('img');
+                        // img.style.display = "inline-block";
+                        // input.appendChild(img);
+                        document.getElementById(dnum).appendChild(input);
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dotsline.png";
+                        img.style.display = 'block';
+                        document.getElementById(dnum).appendChild(img);
+                        var p = document.createElement('p');
+                        document.getElementById(dnum).appendChild(p);
+                    }
+                    isclicked4 = true;
+                } else {
+                    document.getElementById(dnum).innerHTML = '<input type="image" src="./timeline_resource/dotsline.png" onclick="dots(\'' + dnum + '\', ' + count + ')"><p></p>';
+                    isclicked4 = false;
+                }
+            } else if (dnum == "line5") {
+                if (!isclicked5) {
+                    for (var i = 0; i < count; i++) {
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dot.png";
+                        img.style.display = 'inline-block';
+                        document.getElementById(dnum).appendChild(img);
+                        var input = document.createElement('input');
+                        input.setAttribute("type", "button");
+                        // input.setAttribute("onclick", "modal()");
+                        input.setAttribute("style", "background-color: transparent; border-radius: 20px; height: 30px; width: 150px");
+                        // input.setAttribute("src", "./timeline_resource/bubble.png");
+                        input.setAttribute("value", place5[i]);
+                        // img.setAttribute("src", "./timeline_resource/bubble.png");
+                        // var img = document.createElement('img');
+                        // img.style.display = "inline-block";
+                        // input.appendChild(img);
+                        document.getElementById(dnum).appendChild(input);
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dotsline.png";
+                        img.style.display = 'block';
+                        document.getElementById(dnum).appendChild(img);
+                        var p = document.createElement('p');
+                        document.getElementById(dnum).appendChild(p);
+                    }
+                    isclicked5 = true;
+                } else {
+                    document.getElementById(dnum).innerHTML = '<input type="image" src="./timeline_resource/dotsline.png" onclick="dots(\'' + dnum + '\', ' + count + ')"><p></p>';
+                    isclicked5 = false;
+                }
+            } else if (dnum == "line6") {
+                if (!isclicked6) {
+                    for (var i = 0; i < count; i++) {
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dot.png";
+                        img.style.display = 'inline-block';
+                        document.getElementById(dnum).appendChild(img);
+                        var input = document.createElement('input');
+                        input.setAttribute("type", "button");
+                        // input.setAttribute("onclick", "modal()");
+                        input.setAttribute("style", "background-color: transparent; border-radius: 20px; height: 30px; width: 150px");
+                        // input.setAttribute("src", "./timeline_resource/bubble.png");
+                        input.setAttribute("value", place6[i]);
+                        // img.setAttribute("src", "./timeline_resource/bubble.png");
+                        // var img = document.createElement('img');
+                        // img.style.display = "inline-block";
+                        // input.appendChild(img);
+                        document.getElementById(dnum).appendChild(input);
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dotsline.png";
+                        img.style.display = 'block';
+                        document.getElementById(dnum).appendChild(img);
+                        var p = document.createElement('p');
+                        document.getElementById(dnum).appendChild(p);
+                    }
+                    isclicked6 = true;
+                } else {
+                    document.getElementById(dnum).innerHTML = '<input type="image" src="./timeline_resource/dotsline.png" onclick="dots(\'' + dnum + '\', ' + count + ')"><p></p>';
+                    isclicked6 = false;
+                }
+            } else if (dnum == "line7") {
+                if (!isclicked7) {
+                    for (var i = 0; i < count; i++) {
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dot.png";
+                        img.style.display = 'inline-block';
+                        document.getElementById(dnum).appendChild(img);
+                        var input = document.createElement('input');
+                        input.setAttribute("type", "button");
+                        input.setAttribute("onclick", "modal()");
+                        input.setAttribute("style", "background-color: transparent; border-radius: 20px; height: 30px; width: 150px");
+                        // input.setAttribute("src", "./timeline_resource/bubble.png");
+                        input.setAttribute("value", place7[i]);
+                        // img.setAttribute("src", "./timeline_resource/bubble.png");
+                        // var img = document.createElement('img');
+                        // img.style.display = "inline-block";
+                        // input.appendChild(img);
+                        document.getElementById(dnum).appendChild(input);
+                        var img = document.createElement('img');
+                        img.src = "./timeline_resource/dotsline.png";
+                        img.style.display = 'block';
+                        document.getElementById(dnum).appendChild(img);
+                        var p = document.createElement('p');
+                        document.getElementById(dnum).appendChild(p);
+                    }
+                    isclicked7 = true;
+                } else {
+                    document.getElementById(dnum).innerHTML = '<input type="image" src="./timeline_resource/dotsline.png" onclick="dots(\'' + dnum + '\', ' + count + ')"><p></p>';
+                    isclicked7 = false;
+                }
+            }
+        }
+
+        function modal() {
+            // Get the modal
+            var modal = document.getElementById('myModal');
+
+            // Get the button that opens the modal
+            //var btn = document.getElementById("myBtn");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks on the button, open the modal
+
+            modal.style.display = "block";
+
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
